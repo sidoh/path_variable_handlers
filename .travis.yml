@@ -13,6 +13,15 @@ install:
   - platformio update
   - platformio lib -g install 'ESP Async WebServer'
 
+matrix:
+  include:
+    - env:
+      - PLATFORMIO_CI_SRC=examples/esp8266_simple
+      - BOARDS=--board=d1_mini
+  include:
+    - env:
+      - PLATFORMIO_CI_SRC=examples/esp32_simple
+      - BOARDS=--board=esp32doit-devkit-v1
+
 script:
-  - PLATFORMIO_CI_SRC=examples/esp8266_simple platformio ci --board=d1_mini --lib="."
-  - PLATFORMIO_CI_SRC=examples/esp32_simple platformio ci --board=esp32doit-devkit-v1 --lib="."
+  - platformio ci ${BOARDS} --lib="."
