@@ -7,15 +7,17 @@ PathVariableHandler::PathVariableHandler(
     const HTTPMethod method,
     const PathVariableHandler::TPathVariableHandlerFn fn)
   : _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(TokenIterator(_pattern, strlen(pattern), '/')),
+    patternTokens(NULL),
     method(method),
     fn(fn)
 {
   strcpy(_pattern, pattern);
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/'));
 }
 
 PathVariableHandler::~PathVariableHandler() {
   delete _pattern;
+  delete patternTokens;
 }
 
 bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
@@ -29,9 +31,9 @@ bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri)
   strcpy(requestUriCopy, requestUri.c_str());
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
-  patternTokens.reset();
-  while (patternTokens.hasNext() && requestTokens.hasNext()) {
-    const char* patternToken = patternTokens.nextToken();
+  patternTokens->reset();
+  while (patternTokens->hasNext() && requestTokens.hasNext()) {
+    const char* patternToken = patternTokens->nextToken();
     const char* requestToken = requestTokens.nextToken();
 
     if (patternToken[0] != ':' && strcmp(patternToken, requestToken) != 0) {
@@ -39,7 +41,7 @@ bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri)
       break;
     }
 
-    if (patternTokens.hasNext() != requestTokens.hasNext()) {
+    if (patternTokens->hasNext() != requestTokens.hasNext()) {
       canHandle = false;
       break;
     }
@@ -57,7 +59,7 @@ bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMet
   strcpy(requestUriCopy, requestUri.c_str());
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
-  UrlTokenBindings bindings(patternTokens, requestTokens);
+  UrlTokenBindings bindings(*patternTokens, requestTokens);
   fn(&bindings);
 
   return true;
@@ -72,11 +74,12 @@ PathVariableHandler::PathVariableHandler(
     PathVariableHandler::TPathVariableHandlerBodyFn bodyFn
 ) : method(method),
     _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(TokenIterator(_pattern, strlen(pattern), '/')
+    patternTokens(NULL)
 {
   strcpy(_pattern, pattern);
   this->_fn = fn;
   this->_bodyFn = bodyFn;
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/'));
 }
 
 PathVariableHandler::~PathVariableHandler() {
@@ -96,8 +99,8 @@ bool PathVariableHandler::canHandle(AsyncWebServerRequest* request) {
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
   patternTokens->reset();
-  while (patternTokens.hasNext() && requestTokens.hasNext()) {
-    const char* patternToken = patternTokens.nextToken();
+  while (patternTokens->hasNext() && requestTokens.hasNext()) {
+    const char* patternToken = patternTokens->nextToken();
     const char* requestToken = requestTokens.nextToken();
 
     if (patternToken[0] != ':' && strcmp(patternToken, requestToken) != 0) {
@@ -105,7 +108,7 @@ bool PathVariableHandler::canHandle(AsyncWebServerRequest* request) {
       break;
     }
 
-    if (patternTokens.hasNext() != requestTokens.hasNext()) {
+    if (patternTokens->hasNext() != requestTokens.hasNext()) {
       canHandle = false;
       break;
     }
@@ -120,7 +123,7 @@ void PathVariableHandler::handleRequest(AsyncWebServerRequest *request) {
     char requestUriCopy[requestUri.length()];
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
-    UrlTokenBindings bindings(patternTokens, requestTokens);
+    UrlTokenBindings bindings(*patternTokens, requestTokens);
     _fn(&bindings, request);
   }
 }
@@ -131,7 +134,7 @@ void PathVariableHandler::handleBody(AsyncWebServerRequest *request, uint8_t *da
     char requestUriCopy[requestUri.length()];
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
-    UrlTokenBindings bindings(patternTokens, requestTokens);
+    UrlTokenBindings bindings(*patternTokens, requestTokens);
     _bodyFn(&bindings, request, data, len, index, total);
   }
 }

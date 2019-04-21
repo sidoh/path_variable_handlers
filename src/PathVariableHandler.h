@@ -25,7 +25,7 @@ public:
 
 private:
   char* _pattern;
-  TokenIterator patternTokens;
+  TokenIterator* patternTokens;
   const HTTPMethod method;
   const PathVariableHandler::TPathVariableHandlerFn fn;
 };
@@ -59,7 +59,7 @@ public:
 
 private:
   char* _pattern;
-  TokenIterator patternTokens;
+  TokenIterator* patternTokens;
   const WebRequestMethod method;
   PathVariableHandler::TPathVariableHandlerFn _fn;
   PathVariableHandler::TPathVariableHandlerBodyFn _bodyFn;
