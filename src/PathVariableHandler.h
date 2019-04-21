@@ -1,5 +1,5 @@
-#ifndef _PATTERNHANDLER_H
-#define _PATTERNHANDLER_H
+#ifndef _PATH_VARIABLE_HANDLER_H
+#define _PATH_VARIABLE_HANDLER_H
 
 #include <functional>
 #include <TokenIterator.h>
@@ -9,16 +9,16 @@
 
 #include <ESP8266WebServer.h>
 
-class PatternHandler : public RequestHandler {
+class PathVariableHandler : public RequestHandler {
 public:
   typedef std::function<void(UrlTokenBindings*)> TPatternHandlerFn;
 
-  PatternHandler(
+  PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
     const TPatternHandlerFn fn);
 
-  ~PatternHandler();
+  ~PathVariableHandler();
 
   bool canHandle(HTTPMethod requestMethod, String requestUri) override;
   bool handle(ESP8266WebServer& server, HTTPMethod requesetMethod, String requestUri) override;
@@ -27,12 +27,12 @@ private:
   char* _pattern;
   TokenIterator patternTokens;
   const HTTPMethod method;
-  const PatternHandler::TPatternHandlerFn fn;
+  const PathVariableHandler::TPatternHandlerFn fn;
 };
 
 #elif ESP32
 
-class PatternHandler : public AsyncWebHandler {
+class PathVariableHandler : public AsyncWebHandler {
 public:
   typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPatternHandlerFn;
   typedef std::function<void(
@@ -44,12 +44,12 @@ public:
     size_t total
   )> TPatternHandlerBodyFn;
 
-  PatternHandler(const char* pattern,
+  PathVariableHandler(const char* pattern,
     const WebRequestMethod method,
     TPatternHandlerFn fn = NULL,
     TPatternHandlerBodyFn bodyFn = NULL);
 
-  ~PatternHandler();
+  ~PathVariableHandler();
 
   virtual bool isRequestHandlerTrivial() { return false; }
 
@@ -61,8 +61,8 @@ private:
   char* _pattern;
   TokenIterator patternTokens;
   const WebRequestMethod method;
-  PatternHandler::TPatternHandlerFn _fn;
-  PatternHandler::TPatternHandlerBodyFn _bodyFn;
+  PathVariableHandler::TPatternHandlerFn _fn;
+  PathVariableHandler::TPatternHandlerBodyFn _bodyFn;
 };
 
 #endif // Platform

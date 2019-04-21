@@ -1,11 +1,11 @@
-#include <PatternHandler.h>
+#include <PathVariableHandler.h>
 
 #ifdef ESP8266
 
-PatternHandler::PatternHandler(
+PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
-    const PatternHandler::TPatternHandlerFn fn)
+    const PathVariableHandler::TPatternHandlerFn fn)
   : _pattern(new char[strlen(pattern) + 1]),
     patternTokens(TokenIterator(_pattern, strlen(pattern), '/')),
     method(method),
@@ -14,11 +14,11 @@ PatternHandler::PatternHandler(
   strcpy(_pattern, pattern);
 }
 
-PatternHandler::~PatternHandler() {
+PathVariableHandler::~PathVariableHandler() {
   delete _pattern;
 }
 
-bool PatternHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
+bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
   if (this->method != HTTP_ANY && requestMethod != this->method) {
     return false;
   }
@@ -48,7 +48,7 @@ bool PatternHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
   return canHandle;
 }
 
-bool PatternHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, String requestUri) {
+bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, String requestUri) {
   if (! canHandle(requestMethod, requestUri)) {
     return false;
   }
@@ -65,11 +65,11 @@ bool PatternHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, 
 
 #elif ESP32
 
-PatternHandler::PatternHandler(
+PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const WebRequestMethod method,
-    PatternHandler::TPatternHandlerFn fn,
-    PatternHandler::TPatternHandlerBodyFn bodyFn
+    PathVariableHandler::TPatternHandlerFn fn,
+    PathVariableHandler::TPatternHandlerBodyFn bodyFn
 ) : method(method),
     _pattern(new char[strlen(pattern) + 1]),
     patternTokens(TokenIterator(_pattern, strlen(_pattern), '/')
@@ -79,12 +79,12 @@ PatternHandler::PatternHandler(
   this->_bodyFn = bodyFn;
 }
 
-PatternHandler::~PatternHandler() {
+PathVariableHandler::~PathVariableHandler() {
   delete _pattern;
   delete patternTokens;
 }
 
-bool PatternHandler::canHandle(AsyncWebServerRequest* request) {
+bool PathVariableHandler::canHandle(AsyncWebServerRequest* request) {
   if (this->method != HTTP_ANY && request->method() != this->method) {
     return false;
   }
@@ -114,7 +114,7 @@ bool PatternHandler::canHandle(AsyncWebServerRequest* request) {
   return canHandle;
 }
 
-void PatternHandler::handleRequest(AsyncWebServerRequest *request) {
+void PathVariableHandler::handleRequest(AsyncWebServerRequest *request) {
   if (_fn) {
     const String& requestUri = request->url();
     char requestUriCopy[requestUri.length()];
@@ -125,7 +125,7 @@ void PatternHandler::handleRequest(AsyncWebServerRequest *request) {
   }
 }
 
-void PatternHandler::handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
+void PathVariableHandler::handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total) {
   if (_bodyFn) {
     const String& requestUri = request->url();
     char requestUriCopy[requestUri.length()];
