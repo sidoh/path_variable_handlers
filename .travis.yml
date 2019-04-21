@@ -18,7 +18,6 @@ matrix:
     - env:
       - PLATFORMIO_CI_SRC=examples/esp8266_simple
       - BOARDS=--board=d1_mini
-  include:
     - env:
       - PLATFORMIO_CI_SRC=examples/esp32_simple
       - BOARDS=--board=esp32doit-devkit-v1
