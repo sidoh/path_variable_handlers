@@ -1,4 +1,4 @@
-# Path Variable Handlers
+# Path Variable Handlers [![Build Status](https://travis-ci.org/sidoh/path_variable_handlers.svg?branch=master)](https://travis-ci.org/sidoh/path_variable_handlers)
 
 This is a library for handling HTTP and REST paths containing variables. Many RESTful APIs contain resources that have variables in their paths (e.g., `/things/:thing_id`).  This library exposes a way to easily process such resource paths in a low-effort way.
 
