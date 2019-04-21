@@ -8,15 +8,11 @@ cache:
   directories:
     - "~/.platformio"
 
-env:
-  - PLATFORMIO_CI_SRC=examples/esp32_simple
-  - PLATFORMIO_CI_SRC=examples/esp8266_simple
-
 install:
   - pip install -U platformio
   - platformio update
   - platformio lib -g install 'ESP Async WebServer'
 
 script:
-  - platformio ci --board=d1_mini --lib="."
-  - platformio ci --board=esp32doit-devkit-v1 --lib="."
+  - PLATFORMIO_CI_SRC=examples/esp8266_simple platformio ci --board=d1_mini --lib="."
+  - PLATFORMIO_CI_SRC=examples/esp32_simple platformio ci --board=esp32doit-devkit-v1 --lib="."
