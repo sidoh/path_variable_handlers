@@ -1,3 +1,4 @@
+#include <string.h>
 #include <UrlTokenBindings.h>
 
 UrlTokenBindings::UrlTokenBindings(TokenIterator& patternTokens, TokenIterator& requestTokens)
