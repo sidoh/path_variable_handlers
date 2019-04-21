@@ -72,7 +72,7 @@ PathVariableHandler::PathVariableHandler(
     PathVariableHandler::TPathVariableHandlerBodyFn bodyFn
 ) : method(method),
     _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(TokenIterator(_pattern, strlen(_pattern), '/')
+    patternTokens(TokenIterator(_pattern, strlen(pattern), '/')
 {
   strcpy(_pattern, pattern);
   this->_fn = fn;
