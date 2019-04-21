@@ -4,6 +4,7 @@
 #include <functional>
 #include <TokenIterator.h>
 #include <UrlTokenBindings.h>
+#include <string.h>
 
 #if defined(ESP32) || defined(PVH_USE_ASYNC_WEBSERVER)
 #define PVH_ASYNC_WEBSERVER

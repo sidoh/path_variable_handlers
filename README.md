@@ -12,8 +12,8 @@ Examples are found in the `./examples` directory.  This is the easiest way to ge
 
 This library is built on top of handler bindings tied to the espressif platform:
 
-* ESP266: uses the `ESP8266WebServer` bindings built into the SDK.
 * ESP32: uses [`ESPAsyncWebServer`](https://github.com/me-no-dev/ESPAsyncWebServer) bindings.
+* ESP266: uses the `ESP8266WebServer` bindings built into the SDK by default.  Use `ESPAsyncWebServer` by defining `PVH_USE_ASYNC_WEBSERVER`.
 
 ## Development
 
