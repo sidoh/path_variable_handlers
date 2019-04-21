@@ -32,6 +32,8 @@ private:
 
 #elif ESP32
 
+#include <ESPAsyncWebServer.h>
+
 class PathVariableHandler : public AsyncWebHandler {
 public:
   typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPathVariableHandlerFn;

@@ -72,9 +72,9 @@ PathVariableHandler::PathVariableHandler(
     const WebRequestMethod method,
     PathVariableHandler::TPathVariableHandlerFn fn,
     PathVariableHandler::TPathVariableHandlerBodyFn bodyFn
-) : method(method),
-    _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(NULL)
+) : _pattern(new char[strlen(pattern) + 1]),
+    patternTokens(NULL),
+    method(method)
 {
   strcpy(_pattern, pattern);
   this->_fn = fn;
