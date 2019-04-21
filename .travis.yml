@@ -17,7 +17,7 @@ matrix:
   include:
     - env:
       - PLATFORMIO_CI_SRC=examples/esp8266_simple
-      - PLATFORMIO_ADDITIONAL_ARGS='--lib="."'
+      - PLATFORMIO_ADDITIONAL_ARGS='--lib=.'
       - BOARDS=--board=d1_mini
       - PLATFORMIO_CMD=ci
     - env:
