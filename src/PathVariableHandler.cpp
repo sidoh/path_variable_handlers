@@ -12,7 +12,7 @@ PathVariableHandler::PathVariableHandler(
     fn(fn)
 {
   strcpy(_pattern, pattern);
-  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/'));
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
 }
 
 PathVariableHandler::~PathVariableHandler() {
@@ -79,7 +79,7 @@ PathVariableHandler::PathVariableHandler(
   strcpy(_pattern, pattern);
   this->_fn = fn;
   this->_bodyFn = bodyFn;
-  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/'));
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
 }
 
 PathVariableHandler::~PathVariableHandler() {
