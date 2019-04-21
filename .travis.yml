@@ -15,7 +15,7 @@ before_install:
   - source <(curl -SLs https://raw.githubusercontent.com/adafruit/travis-ci-arduino/master/install.sh)
 
 install:
-  - arduino --install-library "ESP Async Web Server"
+  - arduino --install-library "ESP Async WebServer"
 
 
 script:
