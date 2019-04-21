@@ -3,21 +3,19 @@
 #ifdef ESP8266
 
 PatternHandler::PatternHandler(
-    const String& pattern,
+    const char* pattern,
     const HTTPMethod method,
     const PatternHandler::TPatternHandlerFn fn)
-  : _pattern(new char[pattern.length() + 1]),
-    patternTokens(NULL),
+  : _pattern(new char[strlen(pattern) + 1]),
+    patternTokens(TokenIterator(_pattern, pattern.length(), '/')),
     method(method),
     fn(fn)
 {
-  strcpy(_pattern, pattern.c_str());
-  patternTokens = new TokenIterator(_pattern, pattern.length(), '/');
+  strcpy(_pattern, pattern);
 }
 
 PatternHandler::~PatternHandler() {
   delete _pattern;
-  delete patternTokens;
 }
 
 bool PatternHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
@@ -74,10 +72,9 @@ PatternHandler::PatternHandler(
     PatternHandler::TPatternHandlerBodyFn bodyFn
 ) : method(method),
     _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(NULL)
+    patternTokens(TokenIterator(_pattern, strlen(_pattern), '/')
 {
   strcpy(_pattern, pattern);
-  patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
   this->_fn = fn;
   this->_bodyFn = bodyFn;
 }

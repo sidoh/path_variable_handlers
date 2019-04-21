@@ -13,7 +13,8 @@ class PatternHandler : public RequestHandler {
 public:
   typedef std::function<void(UrlTokenBindings*)> TPatternHandlerFn;
 
-  PatternHandler(const String& pattern,
+  PatternHandler(
+    const char* pattern,
     const HTTPMethod method,
     const TPatternHandlerFn fn);
 
@@ -24,7 +25,7 @@ public:
 
 private:
   char* _pattern;
-  TokenIterator* patternTokens;
+  TokenIterator patternTokens;
   const HTTPMethod method;
   const PatternHandler::TPatternHandlerFn fn;
 };
@@ -58,7 +59,7 @@ public:
 
 private:
   char* _pattern;
-  TokenIterator* patternTokens;
+  TokenIterator patternTokens;
   const WebRequestMethod method;
   PatternHandler::TPatternHandlerFn _fn;
   PatternHandler::TPatternHandlerBodyFn _bodyFn;
