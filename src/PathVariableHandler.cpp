@@ -1,35 +1,16 @@
 #include <PathVariableHandler.h>
 
-#ifdef ESP8266
-
-PathVariableHandler::PathVariableHandler(
-    const char* pattern,
-    const HTTPMethod method,
-    const PathVariableHandler::TPathVariableHandlerFn fn)
-  : _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(NULL),
-    method(method),
-    fn(fn)
-{
-  strcpy(_pattern, pattern);
-  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
-}
-
 PathVariableHandler::~PathVariableHandler() {
-  delete _pattern;
+  delete[] _pattern;
   delete patternTokens;
 }
 
-bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
-  if (this->method != HTTP_ANY && requestMethod != this->method) {
-    return false;
-  }
+bool PathVariableHandler::canHandlePath(const char* requestPath, const size_t length) {
+  char requestUriCopy[length+1];
+  strcpy(requestUriCopy, requestPath);
+  TokenIterator requestTokens(requestUriCopy, length, '/');
 
   bool canHandle = true;
-
-  char requestUriCopy[requestUri.length() + 1];
-  strcpy(requestUriCopy, requestUri.c_str());
-  TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
   patternTokens->reset();
   while (patternTokens->hasNext() && requestTokens.hasNext()) {
@@ -48,6 +29,28 @@ bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri)
   }
 
   return canHandle;
+}
+
+#if defined(PVH_ESP8266)
+PathVariableHandler::PathVariableHandler(
+    const char* pattern,
+    const HTTPMethod method,
+    const PathVariableHandler::TPathVariableHandlerFn fn)
+  : _pattern(new char[strlen(pattern) + 1]),
+    patternTokens(NULL),
+    method(method),
+    fn(fn)
+{
+  strcpy(_pattern, pattern);
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
+}
+
+bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
+  if (this->method != HTTP_ANY && requestMethod != this->method) {
+    return false;
+  }
+
+  return canHandlePath(requestUri.c_str(), requestUri.length());
 }
 
 bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, String requestUri) {
@@ -65,7 +68,7 @@ bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMet
   return true;
 }
 
-#elif ESP32
+#elif defined(PVH_ASYNC_WEBSERVER)
 
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
@@ -82,39 +85,13 @@ PathVariableHandler::PathVariableHandler(
   this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
 }
 
-PathVariableHandler::~PathVariableHandler() {
-  delete _pattern;
-  delete patternTokens;
-}
-
 bool PathVariableHandler::canHandle(AsyncWebServerRequest* request) {
   if (this->method != HTTP_ANY && request->method() != this->method) {
     return false;
   }
 
-  bool canHandle = true;
   const String& requestUri = request->url();
-  char requestUriCopy[requestUri.length() + 1];
-  strcpy(requestUriCopy, requestUri.c_str());
-  TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
-
-  patternTokens->reset();
-  while (patternTokens->hasNext() && requestTokens.hasNext()) {
-    const char* patternToken = patternTokens->nextToken();
-    const char* requestToken = requestTokens.nextToken();
-
-    if (patternToken[0] != ':' && strcmp(patternToken, requestToken) != 0) {
-      canHandle = false;
-      break;
-    }
-
-    if (patternTokens->hasNext() != requestTokens.hasNext()) {
-      canHandle = false;
-      break;
-    }
-  }
-
-  return canHandle;
+  return canHandlePath(requestUri.c_str(), requestUri.length());
 }
 
 void PathVariableHandler::handleRequest(AsyncWebServerRequest *request) {
@@ -138,5 +115,11 @@ void PathVariableHandler::handleBody(AsyncWebServerRequest *request, uint8_t *da
     _bodyFn(&bindings, request, data, len, index, total);
   }
 }
-
+#else
+PathVariableHandler::PathVariableHandler(const char* pattern)
+  : _pattern(new char[strlen(pattern) + 1])
+{
+  strcpy(_pattern, pattern);
+  this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
+}
 #endif
