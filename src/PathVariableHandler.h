@@ -20,9 +20,9 @@
 
 #if defined(PVH_ESP8266)
 class PathVariableHandler : public RequestHandler {
+public:
   typedef std::function<void(UrlTokenBindings*)> TPathVariableHandlerFn;
 
-public:
   PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
@@ -32,6 +32,8 @@ public:
   bool handle(ESP8266WebServer& server, HTTPMethod requesetMethod, String requestUri) override;
 #elif defined(PVH_ASYNC_WEBSERVER)
 class PathVariableHandler : public AsyncWebHandler {
+public:
+
   typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPathVariableHandlerFn;
   typedef std::function<void(
     const UrlTokenBindings*,
@@ -42,7 +44,6 @@ class PathVariableHandler : public AsyncWebHandler {
     size_t total
   )> TPathVariableHandlerBodyFn;
 
-public:
   PathVariableHandler(const char* pattern,
     const WebRequestMethod method,
     TPathVariableHandlerFn fn = NULL,
