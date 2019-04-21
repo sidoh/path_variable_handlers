@@ -11,12 +11,12 @@
 
 class PathVariableHandler : public RequestHandler {
 public:
-  typedef std::function<void(UrlTokenBindings*)> TPatternHandlerFn;
+  typedef std::function<void(UrlTokenBindings*)> TPathVariableHandlerFn;
 
   PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
-    const TPatternHandlerFn fn);
+    const TPathVariableHandlerFn fn);
 
   ~PathVariableHandler();
 
@@ -27,14 +27,14 @@ private:
   char* _pattern;
   TokenIterator patternTokens;
   const HTTPMethod method;
-  const PathVariableHandler::TPatternHandlerFn fn;
+  const PathVariableHandler::TPathVariableHandlerFn fn;
 };
 
 #elif ESP32
 
 class PathVariableHandler : public AsyncWebHandler {
 public:
-  typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPatternHandlerFn;
+  typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPathVariableHandlerFn;
   typedef std::function<void(
     const UrlTokenBindings*,
     AsyncWebServerRequest*,
@@ -42,12 +42,12 @@ public:
     size_t len,
     size_t index,
     size_t total
-  )> TPatternHandlerBodyFn;
+  )> TPathVariableHandlerBodyFn;
 
   PathVariableHandler(const char* pattern,
     const WebRequestMethod method,
-    TPatternHandlerFn fn = NULL,
-    TPatternHandlerBodyFn bodyFn = NULL);
+    TPathVariableHandlerFn fn = NULL,
+    TPathVariableHandlerBodyFn bodyFn = NULL);
 
   ~PathVariableHandler();
 
@@ -61,8 +61,8 @@ private:
   char* _pattern;
   TokenIterator patternTokens;
   const WebRequestMethod method;
-  PathVariableHandler::TPatternHandlerFn _fn;
-  PathVariableHandler::TPatternHandlerBodyFn _bodyFn;
+  PathVariableHandler::TPathVariableHandlerFn _fn;
+  PathVariableHandler::TPathVariableHandlerBodyFn _bodyFn;
 };
 
 #endif // Platform

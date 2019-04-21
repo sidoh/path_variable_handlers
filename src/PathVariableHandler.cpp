@@ -5,7 +5,7 @@
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
-    const PathVariableHandler::TPatternHandlerFn fn)
+    const PathVariableHandler::TPathVariableHandlerFn fn)
   : _pattern(new char[strlen(pattern) + 1]),
     patternTokens(TokenIterator(_pattern, strlen(pattern), '/')),
     method(method),
@@ -68,8 +68,8 @@ bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMet
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const WebRequestMethod method,
-    PathVariableHandler::TPatternHandlerFn fn,
-    PathVariableHandler::TPatternHandlerBodyFn bodyFn
+    PathVariableHandler::TPathVariableHandlerFn fn,
+    PathVariableHandler::TPathVariableHandlerBodyFn bodyFn
 ) : method(method),
     _pattern(new char[strlen(pattern) + 1]),
     patternTokens(TokenIterator(_pattern, strlen(_pattern), '/')
