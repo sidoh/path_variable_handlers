@@ -1,4 +1,4 @@
-#include <typedef.h>
+#include <stddef.h>
 
 #ifndef _TOKEN_ITERATOR_H
 #define _TOKEN_ITERATOR_H
