@@ -1,8 +1,8 @@
 # Path Variable Handlers
 
-This is a library for handling HTTP and REST paths containing variables. Many RESTful APIs contain resources that have variables in their paths (e.g., /things/:thing_id).  This library exposes a way to easily process such resource paths in a low-effort way.
+This is a library for handling HTTP and REST paths containing variables. Many RESTful APIs contain resources that have variables in their paths (e.g., `/things/:thing_id`).  This library exposes a way to easily process such resource paths in a low-effort way.
 
-Compatible with ESP8266WebServer for ESP8266 and ESPAsyncWebServer for ESP32.
+Compatible with `ESP8266WebServer` for ESP8266 and ESPAsyncWebServer for `ESP32`.
 
 ## Examples
 
