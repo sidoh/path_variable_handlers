@@ -7,7 +7,7 @@ PatternHandler::PatternHandler(
     const HTTPMethod method,
     const PatternHandler::TPatternHandlerFn fn)
   : _pattern(new char[strlen(pattern) + 1]),
-    patternTokens(TokenIterator(_pattern, pattern.length(), '/')),
+    patternTokens(TokenIterator(_pattern, strlen(pattern), '/')),
     method(method),
     fn(fn)
 {
@@ -29,9 +29,9 @@ bool PatternHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
   strcpy(requestUriCopy, requestUri.c_str());
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
-  patternTokens->reset();
-  while (patternTokens->hasNext() && requestTokens.hasNext()) {
-    const char* patternToken = patternTokens->nextToken();
+  patternTokens.reset();
+  while (patternTokens.hasNext() && requestTokens.hasNext()) {
+    const char* patternToken = patternTokens.nextToken();
     const char* requestToken = requestTokens.nextToken();
 
     if (patternToken[0] != ':' && strcmp(patternToken, requestToken) != 0) {
@@ -39,7 +39,7 @@ bool PatternHandler::canHandle(HTTPMethod requestMethod, String requestUri) {
       break;
     }
 
-    if (patternTokens->hasNext() != requestTokens.hasNext()) {
+    if (patternTokens.hasNext() != requestTokens.hasNext()) {
       canHandle = false;
       break;
     }
@@ -57,7 +57,7 @@ bool PatternHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, 
   strcpy(requestUriCopy, requestUri.c_str());
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
-  UrlTokenBindings bindings(*patternTokens, requestTokens);
+  UrlTokenBindings bindings(patternTokens, requestTokens);
   fn(&bindings);
 
   return true;
@@ -96,8 +96,8 @@ bool PatternHandler::canHandle(AsyncWebServerRequest* request) {
   TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
 
   patternTokens->reset();
-  while (patternTokens->hasNext() && requestTokens.hasNext()) {
-    const char* patternToken = patternTokens->nextToken();
+  while (patternTokens.hasNext() && requestTokens.hasNext()) {
+    const char* patternToken = patternTokens.nextToken();
     const char* requestToken = requestTokens.nextToken();
 
     if (patternToken[0] != ':' && strcmp(patternToken, requestToken) != 0) {
@@ -105,7 +105,7 @@ bool PatternHandler::canHandle(AsyncWebServerRequest* request) {
       break;
     }
 
-    if (patternTokens->hasNext() != requestTokens.hasNext()) {
+    if (patternTokens.hasNext() != requestTokens.hasNext()) {
       canHandle = false;
       break;
     }
@@ -120,7 +120,7 @@ void PatternHandler::handleRequest(AsyncWebServerRequest *request) {
     char requestUriCopy[requestUri.length()];
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
-    UrlTokenBindings bindings(*patternTokens, requestTokens);
+    UrlTokenBindings bindings(patternTokens, requestTokens);
     _fn(&bindings, request);
   }
 }
@@ -131,7 +131,7 @@ void PatternHandler::handleBody(AsyncWebServerRequest *request, uint8_t *data, s
     char requestUriCopy[requestUri.length()];
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
-    UrlTokenBindings bindings(*patternTokens, requestTokens);
+    UrlTokenBindings bindings(patternTokens, requestTokens);
     _bodyFn(&bindings, request, data, len, index, total);
   }
 }
