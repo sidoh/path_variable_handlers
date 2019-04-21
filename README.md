@@ -28,3 +28,8 @@ Build examples with, for instance:
 ```
 platformio ci --board=d1_mini --lib=. examples/esp8266_simple
 ```
+
+#### New Release
+
+1. Update version in `library.properties` and `library.json`.
+1. Create a new tag with the corresponding version and push.
