@@ -25,3 +25,4 @@ matrix:
 
 script:
   - platformio ci ${BOARDS} --lib="."
+  - platformio test

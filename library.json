@@ -23,5 +23,10 @@
   "platforms": [
     "espressif8266",
     "espressif32"
+  ],
+  "examples": "examples/*/*.ino",
+  "exclude": [
+    "platformio.ini",
+    "test"
   ]
 }
