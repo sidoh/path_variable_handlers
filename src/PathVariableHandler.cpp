@@ -31,7 +31,7 @@ bool PathVariableHandler::canHandlePath(const char* requestPath, const size_t le
   return canHandle;
 }
 
-#if defined(PVH_ESP8266)
+#if defined(PVH_BUILTIN_WEBSERVER)
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const HTTPMethod method,
@@ -53,7 +53,7 @@ bool PathVariableHandler::canHandle(HTTPMethod requestMethod, String requestUri)
   return canHandlePath(requestUri.c_str(), requestUri.length());
 }
 
-bool PathVariableHandler::handle(ESP8266WebServer& server, HTTPMethod requestMethod, String requestUri) {
+bool PathVariableHandler::handle(TServerType& server, HTTPMethod requestMethod, String requestUri) {
   if (! canHandle(requestMethod, requestUri)) {
     return false;
   }
