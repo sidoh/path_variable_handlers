@@ -2,7 +2,7 @@
 
 This is a library for handling HTTP and REST paths containing variables. Many RESTful APIs contain resources that have variables in their paths (e.g., `/things/:thing_id`).  This library exposes a way to easily process such resource paths in a low-effort way.
 
-Compatible with `ESP8266WebServer` for ESP8266 and ESPAsyncWebServer for `ESP32`.
+Compatible with ESP8266 and ESP32 builtin web servers, and ESPAsyncWebServer for both platforms.
 
 ### Examples
 
@@ -12,9 +12,14 @@ Examples are found in the `./examples` directory.  This is the easiest way to ge
 
 This library is built on top of handler bindings tied to the espressif platform:
 
-* ESP32: uses [`ESPAsyncWebServer`](https://github.com/me-no-dev/ESPAsyncWebServer) bindings.
-* ESP266: uses the `ESP8266WebServer` bindings built into the SDK by default.  Use `ESPAsyncWebServer` by defining `PVH_USE_ASYNC_WEBSERVER`.
+* ESP32
+  * Builtin `WebServer`.
+  * [`ESPAsyncWebServer`](https://github.com/me-no-dev/ESPAsyncWebServer).
+* ESP266: uses the `ESP8266WebServer` bindings built into the SDK by default.
+  * Builtin `ESP8266WebServer`.
+  * ESPAsyncWebServer.
 
+Defaults to the builtin web server bindings.  To use `ESPAsyncWebServer`, set the build flag `PVH_USE_ASYNC_WEBSERVER`.
 ## Development
 
 Run tests with:
@@ -28,3 +33,8 @@ Build examples with, for instance:
 ```
 platformio ci --board=d1_mini --lib=. examples/esp8266_simple
 ```
+
+#### New Release
+
+1. Update version in `library.properties` and `library.json`.
+1. Create a new tag with the corresponding version and push.

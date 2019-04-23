@@ -6,19 +6,27 @@
 #include <UrlTokenBindings.h>
 #include <string.h>
 
-#if defined(ESP32) || defined(PVH_USE_ASYNC_WEBSERVER)
+#if defined(PVH_USE_ASYNC_WEBSERVER)
 #define PVH_ASYNC_WEBSERVER
+#elif defined(ESP32)
+#define PVH_ESP32
+#define PVH_BUILTIN_WEBSERVER
 #elif defined(ESP8266)
 #define PVH_ESP8266
+#define PVH_BUILTIN_WEBSERVER
 #endif
 
 #ifdef PVH_ASYNC_WEBSERVER
 #include <ESPAsyncWebServer.h>
 #elif defined(PVH_ESP8266)
 #include <ESP8266WebServer.h>
+typedef ESP8266WebServer TServerType;
+#elif defined(PVH_ESP32)
+#include <WebServer.h>
+typedef WebServer TServerType;
 #endif
 
-#if defined(PVH_ESP8266)
+#if defined(PVH_BUILTIN_WEBSERVER)
 class PathVariableHandler : public RequestHandler {
 public:
   typedef std::function<void(UrlTokenBindings*)> TPathVariableHandlerFn;
@@ -29,7 +37,7 @@ public:
     const TPathVariableHandlerFn fn);
 
   bool canHandle(HTTPMethod requestMethod, String requestUri) override;
-  bool handle(ESP8266WebServer& server, HTTPMethod requesetMethod, String requestUri) override;
+  bool handle(TServerType& server, HTTPMethod requesetMethod, String requestUri) override;
 #elif defined(PVH_ASYNC_WEBSERVER)
 class PathVariableHandler : public AsyncWebHandler {
 public:
@@ -70,7 +78,7 @@ public:
 private:
   char* _pattern;
   TokenIterator* patternTokens;
-#if defined(PVH_ESP8266)
+#if defined(PVH_BUILTIN_WEBSERVER)
 private:
   const HTTPMethod method;
   const PathVariableHandler::TPathVariableHandlerFn fn;
