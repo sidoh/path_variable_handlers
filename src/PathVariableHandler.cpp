@@ -74,7 +74,8 @@ PathVariableHandler::PathVariableHandler(
     const char* pattern,
     const WebRequestMethod method,
     PathVariableHandler::TPathVariableHandlerFn fn,
-    PathVariableHandler::TPathVariableHandlerBodyFn bodyFn
+    PathVariableHandler::TPathVariableHandlerBodyFn bodyFn,
+    PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
 ) : _pattern(new char[strlen(pattern) + 1]),
     patternTokens(NULL),
     method(method)
@@ -82,8 +83,24 @@ PathVariableHandler::PathVariableHandler(
   strcpy(_pattern, pattern);
   this->_fn = fn;
   this->_bodyFn = bodyFn;
+  this->_uploadFn = uploadFn;
   this->patternTokens = new TokenIterator(_pattern, strlen(pattern), '/');
 }
+
+PathVariableHandler::PathVariableHandler(
+    const char* pattern,
+    const WebRequestMethod method,
+    PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
+) : PathVariableHandler(pattern, method, NULL, NULL, uploadFn)
+{ }
+
+PathVariableHandler::PathVariableHandler(
+    const char* pattern,
+    const WebRequestMethod method,
+    PathVariableHandler::TPathVariableHandlerFn fn,
+    PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
+) : PathVariableHandler(pattern, method, fn, NULL, uploadFn)
+{ }
 
 bool PathVariableHandler::canHandle(AsyncWebServerRequest* request) {
   if (this->method != HTTP_ANY && request->method() != this->method) {
@@ -101,7 +118,7 @@ void PathVariableHandler::handleRequest(AsyncWebServerRequest *request) {
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
     UrlTokenBindings bindings(*patternTokens, requestTokens);
-    _fn(&bindings, request);
+    _fn(request, &bindings);
   }
 }
 
@@ -112,7 +129,25 @@ void PathVariableHandler::handleBody(AsyncWebServerRequest *request, uint8_t *da
     strcpy(requestUriCopy, requestUri.c_str());
     TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
     UrlTokenBindings bindings(*patternTokens, requestTokens);
-    _bodyFn(&bindings, request, data, len, index, total);
+    _bodyFn(request, data, len, index, total, &bindings);
+  }
+}
+
+void PathVariableHandler::handleUpload(
+  AsyncWebServerRequest *request,
+  const String &filename,
+  size_t index,
+  uint8_t *data,
+  size_t len,
+  bool isFinal
+) {
+  if (_uploadFn) {
+    const String& requestUri = request->url();
+    char requestUriCopy[requestUri.length()];
+    strcpy(requestUriCopy, requestUri.c_str());
+    TokenIterator requestTokens(requestUriCopy, requestUri.length(), '/');
+    UrlTokenBindings bindings(*patternTokens, requestTokens);
+    _uploadFn(request, filename, index, data, len, isFinal, &bindings);
   }
 }
 #else

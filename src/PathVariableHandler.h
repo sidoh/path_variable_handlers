@@ -18,6 +18,7 @@
 
 #ifdef PVH_ASYNC_WEBSERVER
 #include <ESPAsyncWebServer.h>
+typedef AsyncWebServer TServerType;
 #elif defined(PVH_ESP8266)
 #include <ESP8266WebServer.h>
 typedef ESP8266WebServer TServerType;
@@ -42,26 +43,52 @@ public:
 class PathVariableHandler : public AsyncWebHandler {
 public:
 
-  typedef std::function<void(const UrlTokenBindings*, AsyncWebServerRequest* request)> TPathVariableHandlerFn;
+  typedef std::function<void(AsyncWebServerRequest* request, const UrlTokenBindings*)> TPathVariableHandlerFn;
   typedef std::function<void(
-    const UrlTokenBindings*,
     AsyncWebServerRequest*,
     uint8_t* data,
     size_t len,
     size_t index,
-    size_t total
+    size_t total,
+    const UrlTokenBindings*
   )> TPathVariableHandlerBodyFn;
+  typedef std::function<void(
+    AsyncWebServerRequest *request,
+    const String& filename,
+    size_t index,
+    uint8_t *data,
+    size_t len,
+    bool final,
+    const UrlTokenBindings*
+  )> TPathVariableHandlerUploadFn;
+
 
   PathVariableHandler(const char* pattern,
     const WebRequestMethod method,
     TPathVariableHandlerFn fn = NULL,
-    TPathVariableHandlerBodyFn bodyFn = NULL);
+    TPathVariableHandlerBodyFn bodyFn = NULL,
+    TPathVariableHandlerUploadFn uploadFn = NULL);
+  PathVariableHandler(const char* pattern,
+    const WebRequestMethod method,
+    TPathVariableHandlerUploadFn uploadFn);
+  PathVariableHandler(const char* pattern,
+    const WebRequestMethod method,
+    TPathVariableHandlerFn fn,
+    TPathVariableHandlerUploadFn uploadFn);
 
   virtual bool isRequestHandlerTrivial() { return false; }
 
   virtual bool canHandle(AsyncWebServerRequest* request);
   virtual void handleRequest(AsyncWebServerRequest *request);
   virtual void handleBody(AsyncWebServerRequest *request, uint8_t *data, size_t len, size_t index, size_t total);
+  virtual void handleUpload(
+    AsyncWebServerRequest *request,
+    const String& filename,
+    size_t index,
+    uint8_t *data,
+    size_t len,
+    bool isFinal
+  );
 #else
 class PathVariableHandler {
 public:
@@ -86,6 +113,7 @@ private:
   const WebRequestMethod method;
   PathVariableHandler::TPathVariableHandlerFn _fn;
   PathVariableHandler::TPathVariableHandlerBodyFn _bodyFn;
+  PathVariableHandler::TPathVariableHandlerUploadFn _uploadFn;
 #endif
 };
 
