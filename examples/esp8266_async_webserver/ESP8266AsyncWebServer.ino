@@ -20,7 +20,7 @@ void setup() {
     new PathVariableHandler(
       "/things/:thing_id",
       HTTP_GET,
-      [](const UrlTokenBindings* bindings, AsyncWebServerRequest* request) {
+      [](AsyncWebServerRequest* request, const UrlTokenBindings* bindings) {
         String response = "Thing ID was: " + String(bindings->get("thing_id"));
         request->send(200, "text/plain", response);
       }
@@ -34,7 +34,7 @@ void setup() {
     new PathVariableHandler(
       "/things/:thing_id/sub_things/:sub_thing_id",
       HTTP_GET,
-      [](const UrlTokenBindings* bindings, AsyncWebServerRequest* request) {
+      [](AsyncWebServerRequest* request, const UrlTokenBindings* bindings) {
         String response = "Thing ID was: "
           + String(bindings->get("thing_id"))
           + ", sub thing ID was: "

@@ -1,6 +1,5 @@
 #include <Arduino.h>
 
-#include <ESP8266WebServer.h>
 #include <PathVariableHandler.h>
 
 const char* WIFI_SSID = "ssid";
