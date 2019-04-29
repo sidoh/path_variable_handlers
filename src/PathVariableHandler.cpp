@@ -72,7 +72,7 @@ bool PathVariableHandler::handle(TServerType& server, HTTPMethod requestMethod, 
 
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     PathVariableHandler::TPathVariableHandlerFn fn,
     PathVariableHandler::TPathVariableHandlerBodyFn bodyFn,
     PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
@@ -89,14 +89,14 @@ PathVariableHandler::PathVariableHandler(
 
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
 ) : PathVariableHandler(pattern, method, NULL, NULL, uploadFn)
 { }
 
 PathVariableHandler::PathVariableHandler(
     const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     PathVariableHandler::TPathVariableHandlerFn fn,
     PathVariableHandler::TPathVariableHandlerUploadFn uploadFn
 ) : PathVariableHandler(pattern, method, fn, NULL, uploadFn)

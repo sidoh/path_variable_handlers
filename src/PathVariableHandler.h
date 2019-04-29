@@ -64,15 +64,15 @@ public:
 
 
   PathVariableHandler(const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     TPathVariableHandlerFn fn = NULL,
     TPathVariableHandlerBodyFn bodyFn = NULL,
     TPathVariableHandlerUploadFn uploadFn = NULL);
   PathVariableHandler(const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     TPathVariableHandlerUploadFn uploadFn);
   PathVariableHandler(const char* pattern,
-    const WebRequestMethod method,
+    const WebRequestMethodComposite method,
     TPathVariableHandlerFn fn,
     TPathVariableHandlerUploadFn uploadFn);
 
@@ -110,7 +110,7 @@ private:
   const HTTPMethod method;
   const PathVariableHandler::TPathVariableHandlerFn fn;
 #elif defined(PVH_ASYNC_WEBSERVER)
-  const WebRequestMethod method;
+  const WebRequestMethodComposite method;
   PathVariableHandler::TPathVariableHandlerFn _fn;
   PathVariableHandler::TPathVariableHandlerBodyFn _bodyFn;
   PathVariableHandler::TPathVariableHandlerUploadFn _uploadFn;
