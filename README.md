@@ -10,7 +10,6 @@ There is nothing platform-specific about this library.
 
 Examples are found in the `./examples` directory.  This is the easiest way to get started.
 
-Defaults to the builtin web server bindings.  To use `ESPAsyncWebServer`, set the build flag `PVH_USE_ASYNC_WEBSERVER`.
 ## Development
 
 Run tests with:
