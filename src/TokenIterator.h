@@ -18,4 +18,5 @@ private:
   char sep;
   size_t i;
 };
+
 #endif
