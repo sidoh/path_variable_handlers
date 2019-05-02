@@ -6,7 +6,7 @@ While this is mostly useful for REST APIs, it could also be used, for example, t
 
 There is nothing platform-specific about this library.
 
-### Examples
+## Examples
 
 Examples are found in the `./examples` directory.  This is the easiest way to get started.
 
