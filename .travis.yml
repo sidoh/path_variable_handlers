@@ -15,7 +15,7 @@ install:
 matrix:
   include:
     - env:
-      - PLATFORMIO_CI_SRC=examples/simple
+      - PLATFORMIO_CI_SRC=examples/Simple
       - PLATFORMIO_ADDITIONAL_ARGS='--lib=.'
       - BOARDS=--board=d1_mini
       - PLATFORMIO_CMD=ci
