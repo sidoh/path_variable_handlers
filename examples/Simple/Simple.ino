@@ -6,12 +6,12 @@
 void setup() {
   Serial.begin(115200);
 
-  char p1[] = "example/path/a/b/c";
-  char p2[] = "example/path/:var1/:var2/:var3";
+  char templatePath[] = "example/path/:var1/:var2/:var3";
+  char samplePath[] = "example/path/a/b/c";
 
-  TokenIterator itr1(p1, strlen(p1), '/');
-  TokenIterator itr2(p2, strlen(p2), '/');
-  UrlTokenBindings bindings(itr1, itr2);
+  TokenIterator templateItr(templatePath, strlen(templatePath), '/');
+  TokenIterator sampleItr(samplePath, strlen(samplePath), '/');
+  UrlTokenBindings bindings(templateItr, sampleItr);
 
   if (bindings.hasBinding("var1")) {      // has this one
     Serial.println(bindings.get("var1")); // will print "a"
