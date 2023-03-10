@@ -26,16 +26,11 @@ const char* TokenIterator::nextToken() {
 
   if (i == length) {
     nextToken = NULL;
-  } else {
-    i = (nextToken - data);
-
-    if (i < length) {
-      nextToken++;
-    } else {
-      nextToken = NULL;
-    }
+  if (i < length){
+	i++;
+	nextToken++;
   }
-
+  
   current = nextToken;
 
   return token;
