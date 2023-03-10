@@ -26,7 +26,9 @@ const char* UrlTokenBindings::get(const char* searchToken) const {
   while (patternTokens.hasNext() && requestTokens.hasNext()) {
     const char* token = patternTokens.nextToken();
     const char* binding = requestTokens.nextToken();
-
+	
+	if (token == NULL) break;
+	
     if (token[0] == ':' && strcmp(token+1, searchToken) == 0) {
       return binding;
     }
