@@ -24,8 +24,6 @@ const char* TokenIterator::nextToken() {
 
   for (; i < length && *nextToken != 0; i++, nextToken++);
 
-  if (i == length) {
-    nextToken = NULL;
   if (i < length){
 	i++;
 	nextToken++;
