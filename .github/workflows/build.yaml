@@ -1,0 +1,36 @@
+name: Build
+
+on: [push]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        board: [d1_mini, esp32doit-devkit-v1]
+        source: [Simple]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+            .pio/build
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PlatformIO Core
+        run: |
+          pip install -U platformio
+          pio pkg update
+
+      - name: Build PlatformIO
+        run: |
+          pio ci \
+            --board=${{ matrix.board }} \
+            --lib=. \
+          examples/${{ matrix.source }}
