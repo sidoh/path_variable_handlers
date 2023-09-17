@@ -5,7 +5,7 @@
 
 class TokenIterator {
 public:
-  TokenIterator(const char* data, size_t length, char sep = ',');
+  TokenIterator(const char* data, size_t length, char sep = '/');
   ~TokenIterator();
 
   bool hasNext();
