@@ -9,8 +9,8 @@ void test_simple(void) {
   strcpy(buffer1, "a/:b/:c");
   strcpy(buffer2, "a/123/456");
 
-  TokenIterator itr1(buffer1, strlen(buffer1), '/');
-  TokenIterator itr2(buffer2, strlen(buffer2), '/');
+  auto itr1 = std::make_shared<TokenIterator>(buffer1, strlen(buffer1), '/');
+  auto itr2 = std::make_shared<TokenIterator>(buffer2, strlen(buffer2), '/');
 
   UrlTokenBindings bindings(itr1, itr2);
 
