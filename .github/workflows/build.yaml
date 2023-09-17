@@ -1,0 +1,41 @@
+name: Build and test
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+            .pio/build
+          key: ${{ runner.os }}-pio
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install PlatformIO Core
+        run: |
+          pip install -U platformio
+          pio pkg update
+
+      - name: Run unit tests
+        run: pio test
+
+      - name: Build example source for ESP8266
+        run: |
+          pio ci \
+            --board=d1_mini \
+            --lib=. \
+          examples/Simple
+
+      - name: Build example source for ESP32
+        run: |
+          pio ci \
+            --board=esp32doit-devkit-v1 \
+            --lib=. \
+          examples/Simple

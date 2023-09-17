@@ -9,9 +9,8 @@ void setup() {
   char templatePath[] = "example/path/:var1/:var2/:var3";
   char samplePath[] = "example/path/a/b/c";
 
-  TokenIterator templateItr(templatePath, strlen(templatePath), '/');
-  TokenIterator sampleItr(samplePath, strlen(samplePath), '/');
-  UrlTokenBindings bindings(templateItr, sampleItr);
+  auto templateItr = std::make_shared<TokenIterator>(templatePath, strlen(templatePath), '/');
+  UrlTokenBindings bindings(templateItr, samplePath);
 
   if (bindings.hasBinding("var1")) {      // has this one
     Serial.println(bindings.get("var1")); // will print "a"
