@@ -1,6 +1,5 @@
 #include <string.h>
 #include <UrlTokenBindings.h>
-#include <Arduino.h>
 
 #include <memory>
 #include <utility>

@@ -1,5 +1,5 @@
 #include <TokenIterator.h>
-#include <Arduino.h>
+#include <cstring>
 
 TokenIterator::TokenIterator(const char* data, size_t length, const char sep)
   : data(new char[length+1]),
