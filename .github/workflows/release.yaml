@@ -9,6 +9,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
 
+    environment:
+      name: release
+
     steps:
       - name: Create Release
         uses: actions/github-script@v2
