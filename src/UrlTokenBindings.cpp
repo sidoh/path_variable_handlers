@@ -11,6 +11,13 @@ UrlTokenBindings::UrlTokenBindings(
     requestTokens(std::move(requestTokens))
 { }
 
+UrlTokenBindings::UrlTokenBindings(
+    std::shared_ptr<TokenIterator> patternTokens,
+    const char *requestPath
+): patternTokens(std::move(patternTokens)),
+   requestTokens(std::make_shared<TokenIterator>(requestPath, strlen(requestPath), '/'))
+{ }
+
 bool UrlTokenBindings::hasBinding(const char* searchToken) const {
   patternTokens->reset();
 
